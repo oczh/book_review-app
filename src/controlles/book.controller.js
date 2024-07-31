@@ -55,10 +55,10 @@ const deleteBook = async (req, res)=>{
     }
 };
 
-  module.exports = { 
+module.exports = { 
 	add, 
 	list,
-    get,
-    update, 
-    deleteBook
-  }
+  get,
+  update, 
+  deleteBook
+}
