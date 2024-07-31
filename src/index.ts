@@ -2,6 +2,9 @@ import express from 'express';
 import mongoose, { ConnectOptions } from 'mongoose';
 import dotenv from 'dotenv';
 
+const userRouter = require('./routes/user.route');
+const bookRouter = require('./routes/book.route');
+
 dotenv.config();
 
 const app = express();
@@ -17,6 +20,11 @@ mongoose.connect(mongoUri, {
 }).catch((error) => {
   console.error('Error connecting to MongoDB:', error);
 });
+
+app.use(express.json());
+
+app.use('/users', userRouter)
+app.use('/books', bookRouter)
 
 app.get('/', (req, res) => {
   res.send('Hello, TypeScript with Express!');
