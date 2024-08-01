@@ -1,6 +1,6 @@
-import Book from './book.model';
- 
-const add = async (req, res)=>{
+import Book from "../models/book.model";
+
+const add = async (req: any, res: any)=>{
     try {
       const book = new Book(req.body);
       await book.save();
@@ -10,7 +10,7 @@ const add = async (req, res)=>{
     }
   };
 
-const list = async (req, res)=>{ 
+const list = async (req: any, res: any)=>{ 
     try {
       const books = await Book.find();
       res.status(200).send(books);
@@ -19,9 +19,9 @@ const list = async (req, res)=>{
     }
   };
   
-const get = async (req, res)=>{ 
+const get = async (req: any, res: any)=>{ 
     try {
-      const book = await User.findById(req.params.id);
+      const book = await Book.findById(req.params.id);
       if (!book) {
         return res.status(404).send();
       }
@@ -31,7 +31,7 @@ const get = async (req, res)=>{
     }
   };
   
-const update = async (req, res)=>{ 
+const update = async (req: any, res: any)=>{ 
     try {
       const book = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
       if (!book) {
@@ -43,7 +43,7 @@ const update = async (req, res)=>{
     }
   };
   
-const deleteBook = async (req, res)=>{ 
+const deleteBook = async (req: any, res: any)=>{ 
     try {
       const book = await Book.findByIdAndDelete(req.params.id);
       if (!book) {
@@ -55,7 +55,7 @@ const deleteBook = async (req, res)=>{
     }
 };
 
-module.exports = { 
+export { 
 	add, 
 	list,
   get,

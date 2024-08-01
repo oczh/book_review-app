@@ -1,17 +1,19 @@
-import User from './user.model';
+import User from "../models/user.model";
 
-const register = async (req, res)=>{ 
+const register = async (req: any, res: any)=>{
+  console.log(req.body)
   const user = new User(req.body);
 
   try {
     await user.save();
     res.status(201).send(user);
   } catch (error) {
+    console.log(error)
     res.status(400).send(error);
   }
 } 
 
-const login = async (req, res)=>{ 
+const login = async (req: any, res: any)=>{ 
 	try {
     const user = await User.findByCredentials(req.body.email, req.body.password);
     res.send(user);
@@ -20,7 +22,7 @@ const login = async (req, res)=>{
   }
 }
 
-const me = async (req, res)=>{ 
+const me = async (req: any, res: any)=>{ 
 	try {
     const users = await User.find();
     if (users.length === 0) {
@@ -32,7 +34,7 @@ const me = async (req, res)=>{
   } 
 }
 
-module.exports = { 
+export { 
 	register, 
 	login,
   me 

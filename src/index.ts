@@ -1,9 +1,9 @@
 import express from 'express';
 import mongoose, { ConnectOptions } from 'mongoose';
 import dotenv from 'dotenv';
-
-const userRouter = require('./routes/user.route');
-const bookRouter = require('./routes/book.route');
+import { userRouter } from './routes/user.route'
+import { bookRouter } from './routes/book.route'
+import { reviewRouter } from './routes/review.route'
 
 dotenv.config();
 
@@ -25,6 +25,7 @@ app.use(express.json());
 
 app.use('/users', userRouter)
 app.use('/books', bookRouter)
+app.use('/review', reviewRouter)
 
 app.get('/', (req, res) => {
   res.send('Hello, TypeScript with Express!');

@@ -1,6 +1,6 @@
-import Review from './review.model';
+import Review from "../models/review.model";
  
-const add = async (req, res)=>{
+const add = async (req: any, res: any)=>{
   const { rating, comment } = req.body;
   const { bookId } = req.params;
   const review = new Review({
@@ -17,7 +17,7 @@ const add = async (req, res)=>{
   }
 };
 
-const list = async (req, res)=>{ 
+const list = async (req: any, res: any)=>{ 
   const { bookId } = req.params;
   try {
     const reviews = await Review.find({ book: bookId }).populate('author', 'name');
@@ -27,7 +27,7 @@ const list = async (req, res)=>{
   }
 };
   
-const update = async (req, res)=>{ 
+const update = async (req: any, res: any)=>{ 
   const updates = Object.keys(req.body);
   const allowedUpdates = ['rating', 'comment'];
   const isValidOperation = updates.every(update => allowedUpdates.includes(update));
@@ -39,7 +39,7 @@ const update = async (req, res)=>{
     if (!review) {
       return res.status(404).send();
     }
-    updates.forEach(update => (review[update] = req.body[update]));
+    updates.forEach(update => (review.updateOne({ _id: req.params.id}, {update: req.body[update]})));
     await review.save();
     res.send(review);
   } catch (error) {
@@ -47,7 +47,7 @@ const update = async (req, res)=>{
   }
 };
   
-const deleteReview = async (req, res)=>{ 
+const deleteReview = async (req: any, res: any)=>{ 
     try {
         const review = await Review.findOneAndDelete({ _id: req.params.id, author: req.user._id });
         if (!review) {
@@ -59,9 +59,9 @@ const deleteReview = async (req, res)=>{
     }
 };
 
-module.exports = { 
+export { 
     add, 
-	list,
+	  list,
     update, 
     deleteReview
 }
