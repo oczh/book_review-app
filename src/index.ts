@@ -1,6 +1,10 @@
 import express from 'express';
 import mongoose, { ConnectOptions } from 'mongoose';
 import dotenv from 'dotenv';
+import { userRouter } from './routes/user.route'
+import { bookRouter } from './routes/book.route'
+import { reviewRouter } from './routes/review.route'
+import morgan from 'morgan';
 
 dotenv.config();
 
@@ -18,10 +22,17 @@ mongoose.connect(mongoUri, {
   console.error('Error connecting to MongoDB:', error);
 });
 
+app.use(express.json());
+
+app.use('/users', userRouter)
+app.use('/books', bookRouter)
+app.use('/review', reviewRouter)
+
 app.get('/', (req, res) => {
   res.send('Hello, TypeScript with Express!');
 });
 
+app.use(morgan("tiny"));
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
