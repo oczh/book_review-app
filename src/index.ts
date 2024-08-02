@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { userRouter } from './routes/user.route'
 import { bookRouter } from './routes/book.route'
 import { reviewRouter } from './routes/review.route'
+import morgan from 'morgan';
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
   res.send('Hello, TypeScript with Express!');
 });
 
+app.use(morgan("tiny"));
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });

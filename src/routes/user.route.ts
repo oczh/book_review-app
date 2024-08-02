@@ -3,7 +3,12 @@ import auth from "../auth";
 import  {register, login, me } from '../controlles/user.controller'
 
 export const userRouter = Router(); 
- 
+
+// @Router("user")
 userRouter.post('/', register);
-userRouter.post('/login', login); 
+
+// @Router("user")
+userRouter.post('/login', login);
+
+// @Router("user")
 userRouter.get('/me', auth, me);

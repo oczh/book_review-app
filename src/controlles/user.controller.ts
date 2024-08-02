@@ -1,5 +1,6 @@
 import User from "../models/user.model";
 
+// @Post("/")
 const register = async (req: any, res: any)=>{
   const user = new User(req.body);
 
