@@ -4,7 +4,7 @@ import { add, list, update, deleteReview } from "../controlles/review.controller
 
 export const reviewRouter = Router(); 
  
-reviewRouter.post('/books/:bookId/reviews', auth, add);
-reviewRouter.get('/books/:bookId/reviews', list); 
-reviewRouter.patch('/reviews/:id', auth, update);
-reviewRouter.delete('/reviews/:id', auth, deleteReview);
+reviewRouter.post('/:bookId', auth, add);
+reviewRouter.get('/:bookId', list); 
+reviewRouter.patch('/:id', auth, update);
+reviewRouter.delete('/:id', auth, deleteReview);
