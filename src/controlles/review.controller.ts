@@ -1,16 +1,17 @@
+import Book from "../models/book.model";
 import Review from "../models/review.model";
  
 const add = async (req: any, res: any)=>{
-  const { rating, comment } = req.body;
+  const { score, description } = req.body;
   const { bookId } = req.params;
   const review = new Review({
-    rating,
-    comment,
-    book: bookId,
-    author: req.user._id
+    score,
+    description,
+    userId: req.user._id
   });
   try {
-    await review.save();
+    const savedReview = await review.save();
+    await Book.updateOne({ _id: bookId}, {$push : {reviewId: savedReview._id}});
     res.status(201).send(review);
   } catch (error) {
     res.status(400).send(error);
@@ -20,8 +21,13 @@ const add = async (req: any, res: any)=>{
 const list = async (req: any, res: any)=>{ 
   const { bookId } = req.params;
   try {
-    const reviews = await Review.find({ book: bookId }).populate('author', 'name');
-    res.send(reviews);
+    const book = await Book.findById(bookId).populate('reviewId');
+    if(book != null){
+      const reviews = book.reviewId;
+      res.send(reviews);
+    } else {
+      res.status(404).send('Book not found');
+    }
   } catch (error) {
     res.status(500).send(error);
   }
@@ -29,13 +35,13 @@ const list = async (req: any, res: any)=>{
   
 const update = async (req: any, res: any)=>{ 
   const updates = Object.keys(req.body);
-  const allowedUpdates = ['rating', 'comment'];
+  const allowedUpdates = ['score', 'description'];
   const isValidOperation = updates.every(update => allowedUpdates.includes(update));
   if (!isValidOperation) {
     return res.status(400).send({ error: 'Invalid updates!' });
   }
   try {
-    const review = await Review.findOne({ _id: req.params.id, author: req.user._id });
+    const review = await Review.findOne({ _id: req.params.id, userId: req.user._id });
     if (!review) {
       return res.status(404).send();
     }
@@ -49,7 +55,8 @@ const update = async (req: any, res: any)=>{
   
 const deleteReview = async (req: any, res: any)=>{ 
     try {
-        const review = await Review.findOneAndDelete({ _id: req.params.id, author: req.user._id });
+        const review = await Review.findOneAndDelete({ _id: req.params.id, userId: req.user._id });
+        await Book.updateOne({ _id: req.params}, {$pull : {reviewId: req.params.id}});
         if (!review) {
           res.status(404).send();
         }

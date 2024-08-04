@@ -12,12 +12,12 @@ interface IUserModel extends Model<IUser> {
 }
 
 const UserSchema: Schema = new Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, minLength: 3 },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
+  password: { type: String, required: true, minLength: 6 }
 });
 
-// Jelszó hashelése mentés előtt
+// Jelszó hashelése mentés előtt                  
 UserSchema.pre<IUser>('save', async function (next) {
   const user = this;
   if (user.isModified('password')) {
