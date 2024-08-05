@@ -1,4 +1,5 @@
-import Book from "../models/book.model";
+import Book, { IBook } from "../models/book.model";
+import { IReview } from "../models/review.model";
 
 const add = async (req: any, res: any)=>{
     try {
@@ -12,7 +13,10 @@ const add = async (req: any, res: any)=>{
 
 const list = async (req: any, res: any)=>{ 
     try {
-      const books = await Book.find();
+      const books = await Book.find().populate('reviewId');
+      for(let i = 0; i < books.length; i++){
+        average(books[i])
+      }
       res.status(200).send(books);
     } catch (error) {
       res.status(500).send(error);
@@ -21,10 +25,11 @@ const list = async (req: any, res: any)=>{
   
 const get = async (req: any, res: any)=>{ 
     try {
-      const book = await Book.findById(req.params.id);
+      const book = await Book.findById(req.params.id).populate('reviewId');
       if (!book) {
         return res.status(404).send();
       }
+      average(book);
       res.status(200).send(book);
     } catch (error) {
       res.status(500).send(error);
@@ -61,4 +66,13 @@ export {
   get,
   update, 
   deleteBook
+}
+
+function average(book : IBook) {
+  const reviews = book.reviewId as unknown as IReview[];
+  let sum = 0;
+      for(let i = 0; i < reviews.length; i++){
+        sum += reviews[i].score;
+      }  
+      book.rating = sum / reviews.length;
 }
